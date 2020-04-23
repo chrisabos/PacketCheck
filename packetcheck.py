@@ -4,7 +4,7 @@ def check(packet):
 	ip_ver = packet[0]>>4;
 
 	if ip_ver == 4:
-		fields = struct.unpack('BBHHHBBHLL')
+		fields = struct.unpack('BBHHHBBHLL', packet)
 
 		print("Internet Protocol")
 		print("\tVer: {}".format(fields[0]>>4))
