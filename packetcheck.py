@@ -1,16 +1,13 @@
 import binascii
 
 def check(packet):
-	hex = binascii.hexlify(packet)
-	print(hex)
-
 	print("Internet Protocol")
-	print("\tVER: {}".format(hex[0]))
-	print("\tIHL: {}".format(hex[1]))
+	print("\tVER: {}".format(packet[0]))
+	print("\tIHL: {}".format(packet[0]))
 	print("\t-- TOS")
-	print("\t\tDSCP: {}".format(hex[2:2]>>2))
-	print("\t\tECN:  {}".format(hex[2:2]&0x03))
-	print("\tTotal Length: {}".format(hex[4:4]))
+	print("\t\tDSCP: {}".format(packet[1]>>2))
+	print("\t\tECN:  {}".format(packet[1]&0x03))
+	print("\tTotal Length: {}".format(packet[2:3]))
 
 if __name__ == "__main__":
 	print("This is not how this works")
