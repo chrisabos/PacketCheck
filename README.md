@@ -21,13 +21,13 @@ Python Raw Packet Validator
 
 #### Transport Layer
 - TCP (without options)
+- UDP
 
 
 ## TODO
 - IP options
 - TCP options
 - ARP
-- UDP
 - ICMP
 - ICMPv6
 - a billion other protocols
