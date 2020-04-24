@@ -16,7 +16,7 @@ Python Raw Packet Validator
 
 ## What is done
 #### Network Layer
-- IPv4
+- IP (without options)
 - IPv6
 
 #### Transport Layer
@@ -24,6 +24,7 @@ Python Raw Packet Validator
 
 
 ## TODO
+- IP options
 - TCP options
 - ARP
 - UDP
