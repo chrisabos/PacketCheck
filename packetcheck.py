@@ -1,6 +1,8 @@
 import struct, binascii
 
-import iana_protocol_numbers, dscp_translate
+#import .iana_protocol_numbers, .dscp_translate
+
+from .translators import *
 
 # prints <data> interpreted as an ipv4 packet
 def print_ip(data):
@@ -117,6 +119,7 @@ def print_tcp(data):
 		print("\tChecksum: {}".format(hex(checksum)))
 		print("\tUrgent Pointer: {}".format(urgent_pointer))
 
+	# TODO: complete option list
 	if options != '':
 		print("\tTCP Options")
 		for i, b in enumerate(options):
