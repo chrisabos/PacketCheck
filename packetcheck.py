@@ -72,17 +72,74 @@ def print_ipv6(data):
 	print("\tSource IPv6 Address: {} {}".format(src_ipv6_addr, src_ipv6_addr2))
 	print("\tDestination IPv6 Address: {} {}".format(dst_ipv6_addr, dst_ipv6_addr2))
 
+# prints <data> interpreted as a TCP segment
+def print_tcp(data):
+	print("\nTCP")
+	fields = ''
+	options = ''
+	if len(data) == 20:
+		fields = struct.unpack('!HH4s4sBBHHH', data)
+	elif len(data) > 20:
+		fields = struct.unpack('!HH4s4sBBHHH', data[:20])
+		options = data[20:20+(((data[12]>>4) - 5) * 4)]
+	else:
+		print("-- TCP DATA TOO SHORT --")
+		print(data)
+
+	if fields != '':
+		src_port = fields[0]
+		dst_port = fields[1]
+		seq_num = int.from_bytes(fields[2], "big")
+		ack_num = int.from_bytes(fields[3], "big")
+		offset_res_ns = fields[4]
+		tcp_flags = fields[5]
+		win_size = fields[6]
+		checksum = fields[7]
+		urgent_pointer = fields[8]
+
+		print("\tSource port: {}".format(src_port))
+		print("\tDestination port: {}".format(dst_port))
+		print("\tSeq Number: {}".format(seq_num))
+		print("\tAck Number: {}".format(ack_num))
+		print("\tOffset: {}".format(offset_res_ns>>4))
+		print("\tReserved: {}".format(offset_res_ns>>1&0x07))
+		print("\tNS: {}".format(offset_res_ns&0x01))
+		print("\tTCP Flags:")
+		print("\t\tCWR: {}".format(tcp_flags>>7&0x01))
+		print("\t\tECE: {}".format(tcp_flags>>6&0x01))
+		print("\t\tURG: {}".format(tcp_flags>>5&0x01))
+		print("\t\tACK: {}".format(tcp_flags>>4&0x01))
+		print("\t\tPSH: {}".format(tcp_flags>>3&0x01))
+		print("\t\tRST: {}".format(tcp_flags>>2&0x01))
+		print("\t\tSYN: {}".format(tcp_flags>>1&0x01))
+		print("\t\tFIN: {}".format(tcp_flags&0x01))
+		print("\tWindow Size: {}".format(win_size))
+		print("\tChecksum: {}".format(hex(checksum)))
+		print("\tUrgent Pointer: {}".format(urgent_pointer))
+
+	if options != '':
+		print("\tTCP Options")
+		for i, b in enumerate(options):
+			if b == 0:
+				print("\t\t0: End of Option List")
+			elif b == 1:
+				print("\t\t1: No-Operation")
+			else:
+				print(b)
+
 
 # checks a packet
 def check(packet):
 	print("### PacketCheck ###\n")
 
 	ip_ver = packet[0]>>4;
+	proto = -1
 	current_byte = 0
 
 	# is this an ipv4 packet?
 	if ip_ver == 4:
 		ihl = packet[0]&0x0F
+		proto = packet[9]
 		print_ip(packet[current_byte:(current_byte+20)])
 		current_byte += 20
 
@@ -94,8 +151,15 @@ def check(packet):
 
 	# is this an ipv6 packet?
 	elif ip_ver == 6:
+		proto = packet[6]
 		print_ipv6(packet[current_byte:current_byte+40])
 		current_byte += 40
+
+	if proto == 0x06: # proto == TCP
+		if len(packet) > current_byte + 20:
+			print_tcp(packet[current_byte:])
+		else:
+			print("Network layer specified TCP protocol but packet is too short")
 
 
 # idk why someone would ever run this script but here it is
