@@ -29,7 +29,7 @@ ip_daddr = socket.inet_aton(dest_ip)
 ip_header = pack('!BBHHHBBH4s4s' , ip_ver_ihl, ip_tos, ip_len, ip_id, ip_frag, ip_ttl, ip_proto, ip_check, ip_saddr, ip_daddr)
 
 # DEFINE DATA
-user_data = b'Bos'
+user_data = b'Message goes here'
 
 # CREATE PACKET
 packet = ip_header + user_data
