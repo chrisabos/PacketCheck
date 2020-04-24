@@ -1,13 +1,13 @@
-## PacketCheck
+# PacketCheck
 Python Raw Packet Validator
 
-## How to Use
+# How to Use
 
-# Install
+## Install
 git clone https://github.com/chrisabos/PacketCheck.git
 
-# Import
+## Import
 from PacketCheck import *
 
-# Implement
+## Implement
 packetcheck.check(packet)
