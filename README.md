@@ -20,10 +20,11 @@ Python Raw Packet Validator
 - IPv6
 
 #### Transport Layer
-- TCP
+- TCP (without options)
 
 
 ## TODO
+- TCP options
 - ARP
 - UDP
 - ICMP
