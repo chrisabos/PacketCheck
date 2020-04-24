@@ -130,6 +130,29 @@ def print_tcp(data):
 			else:
 				print(b)
 
+# prints <data> interpreted as a UDP datagram
+def print_udp(data):
+	print("\nUDP")
+	fields = ''
+	if len(data) == 8:
+		fields = struct.unpack('!HHHH', data)
+	elif len(data) > 8:
+		print("-- UDP DATA TOO LONG --")
+		print(data)
+	else:
+		print("-- UDP DATA TOO SHORT --")
+		print(data)
+
+	if fields != '':
+		src_port = fields[0]
+		dst_port = fields[1]
+		length = fields[2]
+		checksum = hex(fields[3])
+
+		print("\tSource port: {}".format(src_port))
+		print("\tDestination port: {}".format(dst_port))
+		print("\tLength: {}".format(length))
+		print("\tChecksum: {}".format(checksum))
 
 # checks a packet
 def check(packet):
@@ -163,6 +186,8 @@ def check(packet):
 			print_tcp(packet[current_byte:])
 		else:
 			print("Network layer specified TCP protocol but packet is too short")
+	elif proto == 0x11: # proto == UDP
+		print_udp(packet[current_byte:current_byte+8])
 
 
 # idk why someone would ever run this script but here it is
